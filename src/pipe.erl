@@ -625,6 +625,10 @@ ack({Pid, Tx}, Msg)
  when is_pid(Pid), is_reference(Tx) ->
    % backward compatible with gen_server:reply
    try erlang:send(Pid, {Tx, Msg}), Msg catch _:_ -> Msg end;
+ack({Pid, [alias|Mref] = Tx}, Msg)
+ when is_pid(Pid), is_reference(Mref) ->
+   % OTP-24 backward compatible with gen_server:reply
+   try erlang:send(Pid, {Tx, Msg}), Msg catch _:_ -> Msg end;
 ack({Tx, Pid}, Msg)
  when is_pid(Pid), is_reference(Tx) ->
    try erlang:send(Pid, {Tx, Msg}), Msg catch _:_ -> Msg end;
